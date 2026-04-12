@@ -77,4 +77,4 @@ group :production do
 end
 
 gem "sidekiq", "~> 8.0"
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
