@@ -29,9 +29,6 @@ Rails.application.configure do
   # Delete files synchronously (prevents PurgeJob)
   config.active_storage.queues.purge = nil
 
-  # ============================
-  # SSL / Security
-  # ============================
   config.force_ssl = true
 
   config.log_tags = [:request_id]
@@ -45,8 +42,11 @@ Rails.application.configure do
 
   config.cache_store = :memory_store
 
+  resolved_app_host = ENV["APP_HOST"].to_s.sub(%r{\Ahttps?://}, "").sub(%r{/\z}, "")
+  smtp_domain = ENV.fetch("SMTP_DOMAIN", resolved_app_host).to_s.sub(%r{\Ahttps?://}, "").sub(%r{/\z}, "")
+
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: ENV["APP_HOST"] }
+  config.action_mailer.default_url_options = { host: resolved_app_host, protocol: "https" }
 
   if ENV["SMTP_ADDRESS"].present?
     config.action_mailer.delivery_method = :smtp
@@ -55,7 +55,7 @@ Rails.application.configure do
       port:                 ENV.fetch("SMTP_PORT", 587).to_i,
       user_name:            ENV["SMTP_USER_NAME"],
       password:             ENV["SMTP_PASSWORD"],
-      domain:               ENV.fetch("SMTP_DOMAIN", ENV["APP_HOST"]),
+      domain:               smtp_domain,
       authentication:       :plain,
       enable_starttls_auto: true
     }
