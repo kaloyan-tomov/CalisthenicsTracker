@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
-  get "skills/index"
-  get "skills/show"
-  get "friendships/create"
-  get "friendships/accept"
-  get "friendships/decline"
+  devise_for :users, controllers: {
+    registrations: "users/registrations",
+    sessions: "users/sessions"
+  }
 
   namespace :admin do
     get "dashboard", to: "dashboard#index"
@@ -17,13 +16,6 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users, controllers: {
-  registrations: "users/registrations",
-  sessions: "users/sessions"
-  }
-
-  get "home_page/index"
-  get "home/index"
   get "/login", to: "home_page#login", as: :login
   get "/register", to: "home_page#register"
   post "/register", to: "home_page#create_user"
@@ -32,11 +24,6 @@ Rails.application.routes.draw do
   patch "/profile/update", to: "users#update_profile", as: :update_profile
   get "/profile/password", to: "users#edit_password", as: :edit_password
   patch "/profile/password/update", to: "users#update_password", as: :update_password
-
-
-  namespace :admin do
-    get "dashboard", to: "dashboard#index"
-  end
 
   resources :users, only: [:index]
 
@@ -48,7 +35,6 @@ Rails.application.routes.draw do
   end
 
   get "/friend_requests", to: "friendships#requests", as: :friend_requests
-
   get "/friends", to: "friendships#friends", as: :friends
 
   resources :posts, only: [:index, :new, :create, :show, :destroy] do

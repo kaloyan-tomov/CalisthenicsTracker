@@ -1,29 +1,39 @@
 <% admin_rating = @post.ratings.find_by(user: current_user) if current_user.admin? %>
 
-<div class="w-full max-w-xl bg-white border rounded-lg p-6 shadow-sm mb-6">
+<div class="post-show__card bg-white border rounded-lg p-6 shadow-sm mb-6">
   <div class="flex justify-between text-sm text-gray-500 mb-4">
     <strong class="text-gray-800"><%= @post.user.username %></strong>
     <span><%= time_ago_in_words(@post.created_at) %> ago</span>
   </div>
 
-  <p class="text-gray-800 whitespace-pre-line">
+  <% if @post.skills.any? %>
+    <div class="mb-3 flex flex-wrap gap-2">
+      <% @post.skills.each do |skill| %>
+        <%= link_to skill.name,
+              skill_path(skill),
+              class: "text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <p class="text-gray-800 whitespace-pre-line mb-4">
     <%= @post.content %>
   </p>
 
   <% if @post.media.attached? %>
-    <div class="mt-4 space-y-3">
+    <div class="space-y-3">
       <% @post.media.each do |file| %>
         <% if file.image? %>
-          <%= image_tag file, class: "max-w-full rounded" %>
+          <%= image_tag file, class: "post-show__media" %>
         <% elsif file.video? %>
-          <%= video_tag file, controls: true, class: "max-w-full rounded" %>
+          <%= video_tag file, controls: true, class: "post-show__media" %>
         <% end %>
       <% end %>
     </div>
   <% end %>
 </div>
 
-<div class="w-full max-w-xl mb-6">
+<div class="post-show__card mb-6">
   <% if @post.average_rating %>
     <p class="text-yellow-600 font-semibold mb-2">
       ⭐ Average rating: <%= @post.average_rating %> / 5
@@ -103,7 +113,7 @@
 </div>
 
 <% if @post.ratings.any? %>
-  <div class="w-full max-w-xl mb-6">
+  <div class="post-show__card mb-6">
     <h3 class="font-semibold mb-2">Ratings</h3>
 
     <% @post.ratings.each do |rating| %>
@@ -123,49 +133,57 @@
   </div>
 <% end %>
 
-<h2 class="text-lg font-semibold mb-4">Comments</h2>
+<div class="post-show__card">
+  <h2 class="text-lg font-semibold mb-2">Comments</h2>
 
-<div class="space-y-3 mb-6">
-  <% @post.comments.each do |comment| %>
-    <div class="bg-gray-50 border rounded p-3">
-      <div class="text-sm text-gray-600 mb-1 flex justify-between">
-        <span>
-          <strong><%= comment.user.username %></strong>
-          · <%= time_ago_in_words(comment.created_at) %> ago
-        </span>
+  <p class="text-sm text-gray-500 mb-4">
+    Showing latest <%= @comments.size %> of <%= @comments_total %>
+  </p>
 
-        <% if current_user.admin? || comment.user == current_user %>
-          <%= button_to "Delete",
-                post_comment_path(@post, comment),
-                method: :delete,
-                data: { confirm: "Delete this comment?" },
-                class: "text-red-600 text-sm" %>
-        <% end %>
+  <div class="space-y-3 mb-6">
+    <% @comments.each do |comment| %>
+      <div class="bg-gray-50 border rounded p-3">
+        <div class="text-sm text-gray-600 mb-1 flex justify-between">
+          <span>
+            <strong><%= comment.user.username %></strong>
+            · <%= time_ago_in_words(comment.created_at) %> ago
+          </span>
+
+          <% if current_user.admin? || comment.user == current_user %>
+            <%= button_to "Delete",
+                  post_comment_path(@post, comment),
+                  method: :delete,
+                  form: { data: { turbo_confirm: "Delete this comment?" } },
+                  class: "text-red-600 text-sm" %>
+          <% end %>
+        </div>
+
+        <p class="whitespace-pre-line">
+          <%= comment.content %>
+        </p>
       </div>
+    <% end %>
+  </div>
 
-      <p class="whitespace-pre-line">
-        <%= comment.content %>
-      </p>
+  <%= form_with model: [@post, @comment] do |f| %>
+    <div class="mb-3">
+      <%= f.text_area :content,
+          rows: 3,
+          placeholder: "Write a comment...",
+          class: "w-full border rounded p-2" %>
+    </div>
+
+    <%= f.submit "Comment",
+        class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+  <% end %>
+
+  <% if current_user.admin? || @post.user == current_user %>
+    <div class="mt-6 pt-4 border-t">
+      <%= button_to "Delete Post",
+            post_path(@post),
+            method: :delete,
+            form: { data: { turbo_confirm: "Are you sure?" } },
+            class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" %>
     </div>
   <% end %>
 </div>
-
-<%= form_with model: [@post, @comment], class: "w-full max-w-xl" do |f| %>
-  <div class="mb-3">
-    <%= f.text_area :content,
-        rows: 3,
-        placeholder: "Write a comment...",
-        class: "w-full border rounded p-2" %>
-  </div>
-
-  <%= f.submit "Comment",
-      class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
-<% end %>
-
-<% if current_user.admin? || @post.user == current_user %>
-  <%= button_to "Delete Post",
-        post_path(@post),
-        method: :delete,
-        data: { confirm: "Are you sure?" },
-        class: "bg-red-600 text-white px-4 py-2 rounded mb-4" %>
-<% end %>

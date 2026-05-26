@@ -1,4 +1,10 @@
 class FriendshipsController < ApplicationController
+  rate_limit to: 30,
+             within: 1.minute,
+             only: :create,
+             by: -> { current_user&.id || request.remote_ip },
+             with: -> { redirect_to root_path, alert: "Too many friend requests. Slow down." }
+
   before_action :authenticate_user!
 
   def create
@@ -49,5 +55,9 @@ class FriendshipsController < ApplicationController
     @friends = current_user.friends
     @sent_requests = current_user.pending_sent_invitations
     @received_requests = current_user.pending_received_invitations
+  end
+
+  def requests
+    @requests = current_user.pending_received_invitations
   end
 end

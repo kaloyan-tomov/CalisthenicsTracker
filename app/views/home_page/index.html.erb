@@ -1,21 +1,13 @@
 <h1 class="text-4xl font-bold mb-6">Calisthenics Tracker</h1>
 
-
 <% if user_signed_in? %>
 
-  <div class="w-full flex justify-between items-center mb-10">
-
-    <div class="text-xl font-semibold">
-      You are logged in as <strong><%= current_user.username %></strong>
-    </div>
-
-    <%= render "shared/profile_dropdown" %>
-
+  <div class="text-xl font-semibold mb-10">
+    Welcome back, <strong><%= current_user.username %></strong>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
 
-    <!-- FIND FRIENDS PANEL -->
     <div class="bg-white shadow-lg rounded-xl p-6 mt-6">
       <h2 class="text-xl font-bold mb-4">Find Friends</h2>
 
@@ -91,15 +83,17 @@
   </div>
 
 <% else %>
+  <p class="text-lg text-gray-600 mb-6 text-center max-w-xl">
+    Track your calisthenics journey. Post your attempts, get rated by coaches, and connect with other athletes.
+  </p>
+
   <div class="flex gap-6">
     <%= link_to "Login",
                 login_path,
-                class: "bg-blue-600 text-white px-6 py-2 rounded text-xl" %>
+                class: "bg-blue-600 text-white px-6 py-2 rounded text-xl hover:bg-blue-700" %>
 
     <%= link_to "Register",
                 register_path,
-                class: "bg-green-600 text-white px-6 py-2 rounded text-xl" %>
+                class: "bg-green-600 text-white px-6 py-2 rounded text-xl hover:bg-green-700" %>
   </div>
-
-  <%= render "logged_out_home" if lookup_context.exists?("logged_out_home", "home_page") %>
 <% end %>

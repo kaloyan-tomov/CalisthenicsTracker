@@ -1,14 +1,20 @@
 require "test_helper"
 
 class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
-  test "should redirect to login when not authenticated" do
-    get admin_dashboard_index_url
+  test "redirects to login when not authenticated" do
+    get admin_dashboard_url
     assert_redirected_to login_path
   end
 
-  test "should get index when authenticated as admin" do
+  test "redirects to root when authenticated but not admin" do
+    sign_in users(:user)
+    get admin_dashboard_url
+    assert_redirected_to root_path
+  end
+
+  test "renders when authenticated as admin" do
     sign_in users(:admin)
-    get admin_dashboard_index_url
+    get admin_dashboard_url
     assert_response :success
   end
 end

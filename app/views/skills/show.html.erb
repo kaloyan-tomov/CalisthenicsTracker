@@ -1,4 +1,4 @@
-<div class="w-full max-w-xl">
+<div class="w-full max-w-2xl">
   <h1 class="text-xl font-semibold mb-2">
     <%= @skill.name %>
   </h1>
@@ -14,40 +14,51 @@
     </p>
   <% end %>
 
-  <h2 class="text-lg font-semibold mb-3">Attempts</h2>
+  <h2 class="text-lg font-semibold mb-3">
+    Attempts
+    <span class="text-sm text-gray-500 font-normal">
+      (showing <%= @posts.size %> of <%= @total_count %>)
+    </span>
+  </h2>
 
-  <% @posts.each do |post| %>
-    <div class="bg-white border rounded p-4 mb-4 shadow-sm">
-      <div class="text-sm text-gray-500 mb-2">
-        <strong><%= post.user.username %></strong>
-        · <%= time_ago_in_words(post.created_at) %> ago
-      </div>
+  <div class="flex flex-col items-center">
+    <% @posts.each do |post| %>
+      <article class="post-card">
+        <header class="flex justify-between items-baseline mb-2">
+          <strong><%= post.user.username %></strong>
+          <small class="text-gray-500">
+            <%= time_ago_in_words(post.created_at) %> ago
+          </small>
+        </header>
 
-      <p class="mb-2">
-        <%= truncate(strip_tags(post.content), length: 200) %>
-      </p>
-
-      <% if post.media.attached? %>
-        <div class="space-y-2">
-          <% post.media.each do |file| %>
-            <% if file.image? %>
-              <%= image_tag file, class: "max-w-full rounded" %>
-            <% elsif file.video? %>
-              <%= video_tag file, controls: true, class: "max-w-full rounded" %>
-            <% end %>
-          <% end %>
-        </div>
-      <% end %>
-
-      <% if post.average_rating %>
-        <p class="text-sm text-yellow-700 mt-2">
-          ⭐ Post rating: <%= post.average_rating %> / 5
+        <p class="post-card__content mb-3 text-gray-800">
+          <%= truncate(strip_tags(post.content), length: 280) %>
         </p>
-      <% end %>
 
-      <%= link_to "View post",
-            post_path(post),
-            class: "inline-block mt-2 text-sm text-indigo-600 hover:underline" %>
-    </div>
-  <% end %>
+        <% if post.media.attached? && (file = post.media.first) %>
+          <% if file.image? %>
+            <%= image_tag file, class: "post-card__media mb-3", loading: "lazy" %>
+          <% elsif file.video? %>
+            <%= video_tag file, controls: true, class: "post-card__media mb-3" %>
+          <% end %>
+        <% end %>
+
+        <footer class="flex justify-between items-center">
+          <% if post.average_rating %>
+            <span class="text-sm text-yellow-700">
+              ⭐ <%= post.average_rating %> / 5
+            </span>
+          <% else %>
+            <span class="text-sm text-gray-400">No ratings</span>
+          <% end %>
+
+          <%= link_to "Open",
+                post_path(post),
+                class: "px-3 py-1 rounded bg-indigo-100 text-indigo-700 hover:bg-indigo-200 text-sm font-medium" %>
+        </footer>
+      </article>
+    <% end %>
+  </div>
+
+  <%= render "shared/pagination", page: @page, total_pages: @total_pages %>
 </div>

@@ -1,4 +1,9 @@
 class HomePageController < ApplicationController
+  rate_limit to: 5,
+             within: 1.hour,
+             only: :create_user,
+             with: -> { redirect_to register_path, alert: "Too many registration attempts. Try again later." }
+
   def index
   end
 
@@ -13,9 +18,8 @@ class HomePageController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      sign_in(@user)  # DEVlSE auto-login
-      flash[:notice] = "Welcome, #{@user.username}!"
-      redirect_to root_path
+      flash[:notice] = "Account created. Please check your email to confirm your address before signing in."
+      redirect_to login_path
     else
       flash[:alert] = @user.errors.full_messages.join(", ")
       render :register, status: :unprocessable_entity

@@ -1,11 +1,46 @@
-<% if user_signed_in? %>
-  <span>Signed in as: <%= current_user.email %> (<%= current_user.role %>)</span>
+<nav class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-sm z-40">
+  <div class="container mx-auto px-5 py-3 flex items-center justify-between gap-4">
 
-  <% if current_user.admin? %>
-    <%= link_to "Admin Dashboard", admin_dashboard_path, class: "btn btn--dark" %>
-  <% end %>
+    <div class="flex items-center gap-2 md:gap-4">
+      <%= link_to "🏋️ CalisthenicsTracker",
+                  root_path,
+                  class: "font-bold text-lg whitespace-nowrap text-gray-800 hover:text-blue-600" %>
 
-  <%= button_to "Sign out", destroy_user_session_path, method: :delete %>
-<% else %>
-  <%= link_to "Sign in", new_user_session_path %>
-<% end %>
+      <% if user_signed_in? %>
+        <div class="hidden md:flex items-center gap-1">
+          <%= link_to "Posts",
+                      posts_path,
+                      class: "px-3 py-1 rounded hover:bg-gray-100 text-sm font-medium" %>
+          <%= link_to "Skills",
+                      skills_path,
+                      class: "px-3 py-1 rounded hover:bg-gray-100 text-sm font-medium" %>
+          <%= link_to "Users",
+                      users_path,
+                      class: "px-3 py-1 rounded hover:bg-gray-100 text-sm font-medium" %>
+          <%= link_to "Friends",
+                      friends_path,
+                      class: "px-3 py-1 rounded hover:bg-gray-100 text-sm font-medium" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <% if user_signed_in? %>
+        <% if current_user.admin? %>
+          <%= link_to "Admin",
+                      admin_dashboard_path,
+                      class: "px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 text-sm font-medium" %>
+        <% end %>
+        <%= render "shared/profile_dropdown" %>
+      <% else %>
+        <%= link_to "Login",
+                    login_path,
+                    class: "px-3 py-1 rounded hover:bg-gray-100 text-sm font-medium" %>
+        <%= link_to "Register",
+                    register_path,
+                    class: "px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 text-sm font-medium" %>
+      <% end %>
+    </div>
+
+  </div>
+</nav>

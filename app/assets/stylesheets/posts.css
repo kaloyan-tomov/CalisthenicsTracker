@@ -1,6 +1,40 @@
 .post-card {
-  border: 1px solid #ddd;
-  padding: 12px;
-  margin-bottom: 12px;
+  width: 100%;
+  max-width: 640px;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.post-card__media {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
   border-radius: 8px;
+  background: #f3f4f6;
+}
+
+.post-card__content {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 4.5rem;
+}
+
+.post-show__card {
+  width: 100%;
+  max-width: 720px;
+}
+
+.post-show__media {
+  width: 100%;
+  max-height: 560px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f3f4f6;
 }
