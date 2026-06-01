@@ -20,3 +20,7 @@
   <%= f.submit "Log In", class: "bg-blue-600 text-white py-2 px-4 rounded" %>
 
 <% end %>
+
+<p class="mt-6 text-center text-sm text-gray-600">
+  <%= link_to "Resend confirmation email", new_user_confirmation_path, class: "underline" %>
+</p>

@@ -1,4 +1,8 @@
 class Users::SessionsController < Devise::SessionsController
+  def new
+    redirect_to login_path
+  end
+
   rate_limit to: 10,
              within: 3.minutes,
              only: :create,
