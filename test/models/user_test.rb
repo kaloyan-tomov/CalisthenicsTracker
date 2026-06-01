@@ -2,24 +2,30 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   test "requires username" do
-    user = User.new(email: "x@example.com", password: "password123")
+    user = User.new(email: "x@example.com", password: "Password123")
     assert_not user.save
     assert_includes user.errors[:username], "can't be blank"
   end
 
   test "requires unique email" do
-    user = User.new(email: users(:user).email, username: "another", password: "password123")
+    user = User.new(email: users(:user).email, username: "another", password: "Password123")
     assert_not user.save
     assert_includes user.errors[:email], "has already been taken"
   end
 
   test "requires password of at least 6 characters" do
-    user = User.new(email: "new@example.com", username: "new", password: "short")
+    user = User.new(email: "new@example.com", username: "new", password: "Ab1")
     assert_not user.save
   end
 
+  test "requires password with uppercase lowercase and number" do
+    user = User.new(email: "new@example.com", username: "newuser", password: "password123")
+    assert_not user.save
+    assert_includes user.errors[:password], "must include at least one uppercase letter, one lowercase letter, and one number (minimum 6 characters)"
+  end
+
   test "creates valid trainee user" do
-    user = User.new(email: "valid@example.com", username: "valid", password: "password123")
+    user = User.new(email: "valid@example.com", username: "valid", password: "Password123")
     assert user.save
     assert user.trainee?
   end

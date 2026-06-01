@@ -22,8 +22,8 @@ class HomePageControllerTest < ActionDispatch::IntegrationTest
         user: {
           username: "Brand New",
           email: "brand-new@example.com",
-          password: "password123",
-          password_confirmation: "password123"
+          password: "Password123",
+          password_confirmation: "Password123"
         }
       }
     end
@@ -39,7 +39,7 @@ class HomePageControllerTest < ActionDispatch::IntegrationTest
         user: {
           username: "X",
           email: "x@example.com",
-          password: "password123",
+          password: "Password123",
           password_confirmation: "different"
         }
       }

@@ -137,7 +137,10 @@
   <h2 class="text-lg font-semibold mb-2">Comments</h2>
 
   <p class="text-sm text-gray-500 mb-4">
-    Showing latest <%= @comments.size %> of <%= @comments_total %>
+    Showing <%= @comments.size %> of <%= @comments_total %> comments
+    <% if @total_pages > 1 %>
+      · page <%= @page %> of <%= @total_pages %>
+    <% end %>
   </p>
 
   <div class="space-y-3 mb-6">
@@ -164,6 +167,8 @@
       </div>
     <% end %>
   </div>
+
+  <%= render "shared/pagination", page: @page, total_pages: @total_pages %>
 
   <%= form_with model: [@post, @comment] do |f| %>
     <div class="mb-3">

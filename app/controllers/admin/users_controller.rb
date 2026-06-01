@@ -34,12 +34,5 @@ module Admin
       user.update!(timeout_until: nil)
       redirect_to admin_users_path, notice: "Timeout cleared"
     end
-
-    private
-
-    def require_admin!
-      return if current_user.admin?
-      redirect_to root_path, alert: "Admins only"
-    end
   end
 end

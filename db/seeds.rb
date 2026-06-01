@@ -1,12 +1,12 @@
-User.find_or_create_by!(email: "ktomov.dev@gmail.com") do |u|
-  u.username = "Kaloyan"
-  u.password = "SPYRALex67"
-  u.password_confirmation = "SPYRALex67"
-  u.role = :admin
-  u.confirmed_at = Time.current
-end
+admin = User.find_or_initialize_by(email: "ktomov.dev@gmail.com")
+admin.username = "Kaloyan"
+admin.password = "SPYRALex67"
+admin.password_confirmation = "SPYRALex67"
+admin.role = :admin
+admin.confirmed_at = Time.current
+admin.save!
 
-skills = [
+[
   "Push-up",
   "Pull-up",
   "Handstand",
@@ -15,8 +15,6 @@ skills = [
   "Back Lever",
   "Muscle-up",
   "Dip"
-]
-
-skills.each do |name|
+].each do |name|
   Skill.find_or_create_by!(name: name)
 end

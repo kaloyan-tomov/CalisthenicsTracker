@@ -46,28 +46,7 @@ class UsersController < ApplicationController
   end
 
   private
-
-  # ------------------------------------------------------------------
-  # PHASE 3 NOTE:
-  #
-  # We intentionally DO NOT restrict profile edits or password changes
-  # for timed-out users.
-  #
-  # If you ever want to enable this restriction, add:
-  #
-  # before_action :block_timed_out_users, only: [:update_profile, :update_password]
-  #
-  # and uncomment the method below.
-  # ------------------------------------------------------------------
-  #
-  # def block_timed_out_users
-  #   if current_user.timed_out?
-  #     redirect_to root_path,
-  #                 alert: "Your account is temporarily restricted until #{current_user.timeout_until.strftime('%H:%M %d %b')}"
-  #   end
-  # end
-  # ------------------------------------------------------------------
-
+  
   def profile_params
     params.require(:user).permit(:username)
   end

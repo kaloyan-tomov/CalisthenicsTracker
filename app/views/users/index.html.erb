@@ -1,6 +1,5 @@
 <h1 class="text-3xl font-bold mb-6">Users</h1>
 
-<!-- SEARCH -->
 <%= form_with url: users_path, method: :get, class: "mb-6 flex gap-3" do %>
   <%= text_field_tag :query, params[:query], placeholder: "Search users...",
         class: "border p-2 rounded w-64" %>
@@ -9,7 +8,6 @@
         class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
 <% end %>
 
-<!-- USER LIST -->
 <div class="space-y-4">
   <% @users.each do |user| %>
 

@@ -74,4 +74,21 @@ class PostsControllerTest < ActionDispatch::IntegrationTest
       delete post_url(foreign_post)
     end
   end
+
+  test "show paginates comments" do
+    sign_in users(:user)
+    post_record = posts(:one)
+
+    11.times do |i|
+      post_record.comments.create!(user: users(:user), content: "Comment #{i}")
+    end
+
+    get post_url(post_record)
+    assert_response :success
+    assert_match(/Page\s*1\s*of\s*2/, response.body)
+
+    get post_url(post_record, page: 2)
+    assert_response :success
+    assert_match(/Page\s*2\s*of\s*2/, response.body)
+  end
 end

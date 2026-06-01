@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   POSTS_PER_PAGE = 10
+  COMMENTS_PER_PAGE = 10
 
   rate_limit to: 10,
              within: 1.minute,
@@ -54,8 +55,17 @@ class PostsController < ApplicationController
 
   def show
     @comment = Comment.new
-    @comments_total = @post.comments.count
-    @comments = @post.comments.includes(:user).order(created_at: :desc).limit(10)
+
+    comments_base = @post.comments.includes(:user).order(created_at: :desc)
+    @comments_total = comments_base.count
+
+    @page = [params[:page].to_i, 1].max
+    @total_pages = [(@comments_total.to_f / COMMENTS_PER_PAGE).ceil, 1].max
+    @page = @total_pages if @page > @total_pages
+
+    @comments = comments_base
+                  .offset((@page - 1) * COMMENTS_PER_PAGE)
+                  .limit(COMMENTS_PER_PAGE)
   end
 
   def destroy

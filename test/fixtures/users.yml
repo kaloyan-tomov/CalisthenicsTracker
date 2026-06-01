@@ -1,20 +1,21 @@
 admin:
   email: admin@example.com
   username: admin
-  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "Password123") %>
   role: admin
   confirmed_at: <%= Time.current %>
 
 user:
   email: user@example.com
   username: testuser
-  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "Password123") %>
   role: trainee
   confirmed_at: <%= Time.current %>
 
 unconfirmed:
   email: unconfirmed@example.com
   username: unconfirmed
-  encrypted_password: <%= Devise::Encryptor.digest(User, "password123") %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, "Password123") %>
   role: trainee
+  confirmation_token: unconfirmed-fixture-token
   confirmation_sent_at: <%= Time.current %>
